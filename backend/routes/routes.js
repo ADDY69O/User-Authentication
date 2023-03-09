@@ -1,7 +1,7 @@
 const express =require('express');
 const router =express.Router();
 
-const {getAllUsers,createAccount,deleteAccount}= require('../Controllers/Controllers.js');
+const {getAllUsers,createAccount,deleteAccount,login}= require('../Controllers/Controllers.js');
 
 
 
@@ -13,9 +13,10 @@ router.get('/',async(req,res)=>{
     res.send("At home page");
 })
 
-router.get('/lol',getAllUsers);
-router.post('/demo',createAccount);
-router.delete('/',deleteAccount);
+router.get('/all',getAllUsers);
+router.post('/register',createAccount);
+router.post('/login',login);
+router.delete('/delete',deleteAccount);
 
 
 
