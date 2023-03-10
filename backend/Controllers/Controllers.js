@@ -7,14 +7,52 @@ const router =express.Router();
 
 
 
- const getAllUsers=async(req,res)=>{
+ const about=async(req,res)=>{
+  
+  const userFind=await modals.findOne({isLogin:true});
+  
+  if(!userFind){
+    return res.status(422).json({message: 'Login Again'});
+  }
+  else{
+    try{
+      return res.status(201).send(userFind);
+    }
+    catch(err){
 
-  const  doc = await modals.find({});
+      console.log(err);
 
-  res.send(doc);
+    }
+
+  }
+
 
 
 }
+
+const logout=async(req,res)=>{
+
+  const userFind=await modals.findOne({isLogin:true});
+
+  if(!userFind){
+    return res.status(422).json({error:"Login Again"});
+  }
+  else{
+    try{  
+      userFind.isLogin = false;
+     await userFind.save();
+      return res.status(201).json({message:"Logout Successfully"});
+    }
+    catch(err){
+      console.log(err);
+    }
+
+  }
+
+  
+
+}
+
 
 const login =async(req,res)=>{
 
@@ -33,6 +71,8 @@ const login =async(req,res)=>{
   }
   else{
     try{
+      userFind.isLogin=true;
+    await  userFind.save()
    return  res.status(201).json({message:"Successfully login"})
     }
     catch(err){
@@ -65,17 +105,17 @@ const login =async(req,res)=>{
     const userFind=await modals.findOne({email:email});
 
       if(userFind){
-        return res.status(422).json({message:"Already user present "})
+        return res.status(422).json({error:"Already user present "})
       }
       
-      // var salt = bcrypt.genSaltSync(10);
-      // var hash = bcrypt.hashSync(password, salt);
+
     
       let user=new modals();
       user.username=username;
       user.email=email;
       user.password=password;
       user.cpassword=cpassword;
+      user.isLogin=false;
 
       try{
        
@@ -98,8 +138,23 @@ const login =async(req,res)=>{
 }
 
  const deleteAccount=async(req,res)=>{
+  const  doc =  await modals.deleteMany({isLogin:true});
+  if(!doc){
+    return res.status(422).json({error:"Login Again"});
+  }
+  else{
+
+    try{
+      
+      return res.status(201).json({message:"Account deleted Successfully"});
+    }
+    catch(error){
+  
+    }
+  }
+
 
 
 }
 
-module.exports= {router,getAllUsers,createAccount,deleteAccount,login};
+module.exports= {router,about,createAccount,deleteAccount,login,logout};
