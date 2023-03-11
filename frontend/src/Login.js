@@ -51,16 +51,7 @@
                 setform({...form,[e.target.name]:e.target.value});
             }
 
-            useEffect(() => {
-                
-                setloading(true);
-                setTimeout(()=>{
-                    setloading(false);
-                },3000 )
-
-
-            }, [])
-            
+        
 
         
             return (
